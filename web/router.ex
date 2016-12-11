@@ -16,9 +16,8 @@ defmodule TodoList.Router do
   scope "/", TodoList do
     pipe_through :browser # Use the default browser stack
 
-    get "/", PageController, :index
-
-    resources "/tasks", TaskController
+    get "/", TaskController, :index
+    resources "/tasks", TaskController, except: [:index, :show]
   end
 
   # Other scopes may use custom stacks.

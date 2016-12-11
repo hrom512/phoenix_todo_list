@@ -4,8 +4,18 @@ defmodule TodoList.TaskController do
   alias TodoList.Task
 
   def index(conn, _params) do
-    tasks = Repo.all(Task)
-    render(conn, "index.html", tasks: tasks)
+    tasks =
+      Task
+      |> where(completed: false)
+      |> order_by(desc: :inserted_at)
+      |> Repo.all
+    completed_tasks =
+      Task
+      |> where(completed: true)
+      |> order_by(desc: :inserted_at)
+      |> limit(5)
+      |> Repo.all
+    render(conn, "index.html", tasks: tasks, completed_tasks: completed_tasks)
   end
 
   def new(conn, _params) do
@@ -26,11 +36,6 @@ defmodule TodoList.TaskController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    task = Repo.get!(Task, id)
-    render(conn, "show.html", task: task)
-  end
-
   def edit(conn, %{"id" => id}) do
     task = Repo.get!(Task, id)
     changeset = Task.changeset(task)
@@ -45,7 +50,7 @@ defmodule TodoList.TaskController do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task updated successfully.")
-        |> redirect(to: task_path(conn, :show, task))
+        |> redirect(to: task_path(conn, :index))
       {:error, changeset} ->
         render(conn, "edit.html", task: task, changeset: changeset)
     end

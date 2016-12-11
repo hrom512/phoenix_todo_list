@@ -7,7 +7,7 @@ defmodule TodoList.TaskControllerTest do
 
   test "lists all entries on index", %{conn: conn} do
     conn = get conn, task_path(conn, :index)
-    assert html_response(conn, 200) =~ "Listing tasks"
+    assert html_response(conn, 200) =~ "Tasks"
   end
 
   test "renders form for new resources", %{conn: conn} do
@@ -26,18 +26,6 @@ defmodule TodoList.TaskControllerTest do
     assert html_response(conn, 200) =~ "New task"
   end
 
-  test "shows chosen resource", %{conn: conn} do
-    task = Repo.insert! %Task{title: "My task"}
-    conn = get conn, task_path(conn, :show, task)
-    assert html_response(conn, 200) =~ "Show task"
-  end
-
-  test "renders page not found when id is nonexistent", %{conn: conn} do
-    assert_error_sent 404, fn ->
-      get conn, task_path(conn, :show, -1)
-    end
-  end
-
   test "renders form for editing chosen resource", %{conn: conn} do
     task = Repo.insert! %Task{title: "My task"}
     conn = get conn, task_path(conn, :edit, task)
@@ -47,7 +35,7 @@ defmodule TodoList.TaskControllerTest do
   test "updates chosen resource and redirects when data is valid", %{conn: conn} do
     task = Repo.insert! %Task{title: "My task"}
     conn = put conn, task_path(conn, :update, task), task: @valid_attrs
-    assert redirected_to(conn) == task_path(conn, :show, task)
+    assert redirected_to(conn) == task_path(conn, :index)
     assert Repo.get_by(Task, @valid_attrs)
   end
 
