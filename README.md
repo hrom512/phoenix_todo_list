@@ -1,5 +1,7 @@
 # TodoList
 
+[![Build Status](https://travis-ci.org/hrom512/phoenix_todo_list.svg?branch=master)](https://travis-ci.org/hrom512/phoenix_todo_list)
+
 To start your Phoenix app:
 
   * Install dependencies with `mix deps.get`
